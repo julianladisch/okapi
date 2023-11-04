@@ -1,4 +1,3 @@
-# Name of this GitHub Actions workflow.
 name: Semgrep
 
 on:
@@ -30,18 +29,12 @@ jobs:
           name: zipfile
           path: archive.zip
   semgrep:
-    # User definable name of this GitHub Actions job.
+    needs: buildmavenDepTree
     name: semgrep/ci 
-    # If you are self-hosting, change the following `runs-on` value: 
     runs-on: ubuntu-latest
-
     container:
-      # A Docker image with Semgrep installed. Do not change this.
       image: returntocorp/semgrep
-
-    # Skip any PR created by dependabot to avoid permission issues:
     if: (github.actor != 'dependabot[bot]')
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
