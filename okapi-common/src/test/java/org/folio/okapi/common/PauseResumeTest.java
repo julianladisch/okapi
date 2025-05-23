@@ -21,10 +21,10 @@ public class PauseResumeTest {
   private Vertx vertx;
   private static final int PORT = 9230;
 
-  // @Before
+  @Before
   public void setUp(TestContext context) {
     vertx = Vertx.vertx();
-
+    /*
     Router router = Router.router(vertx);
 
     HttpServer server = vertx.createHttpServer()
@@ -32,6 +32,7 @@ public class PauseResumeTest {
 
     server.listen(PORT)
     .onComplete(context.asyncAssertSuccess());
+    */
   }
 
   @Test
