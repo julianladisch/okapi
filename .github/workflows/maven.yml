@@ -7,17 +7,16 @@ jobs:
     strategy:
       matrix:
         runner: ['ubuntu-22.04', 'ubuntu-22.04-arm']
+        distribution: ['temurin', 'oracle', 'corretto', 'semeru']
       fail-fast: false
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: ${{ matrix.distribution }}
           java-version: '21'
           cache: maven
       - run: mvn --batch-mode verify
-        env:
-          TESTCONTAINERS_POSTGRES_IMAGE: ${{ matrix.postgres }}
