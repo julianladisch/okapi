@@ -23,12 +23,10 @@ public class PauseResumeTest {
     vertx.createHttpServer()
       .requestHandler(x -> {})
       .listen(0)
-      .onComplete(context.asyncAssertSuccess());
-
-    vertx.createHttpClient().request(HttpMethod.GET, "example.invalid", "/")
-    .onComplete(context.asyncAssertFailure(res -> {
-      context.assertTrue(res.getMessage().contains("example.invalid"), res.getMessage());
-    }));
+      .compose(x -> vertx.createHttpClient().request(HttpMethod.GET, "example.invalid", "/"))
+      .onComplete(context.asyncAssertFailure(res -> {
+        context.assertTrue(res.getMessage().contains("example.invalid"), res.getMessage());
+      }));
   }
 
 }
