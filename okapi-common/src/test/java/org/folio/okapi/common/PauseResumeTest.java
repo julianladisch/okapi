@@ -25,10 +25,8 @@ public class PauseResumeTest {
   public void setUp(TestContext context) {
     vertx = Vertx.vertx();
 
-    Router router = Router.router(vertx);
-
     HttpServer server = vertx.createHttpServer()
-      .requestHandler(router)
+      .requestHandler(x -> {})
       .listen(PORT)
       .onComplete(context.asyncAssertSuccess());
   }
