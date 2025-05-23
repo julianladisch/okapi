@@ -16,20 +16,15 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class PauseResumeTest {
 
-  private Vertx vertx;
-
-  @Before
-  public void setUp(TestContext context) {
-    vertx = Vertx.vertx();
+  @Test
+  public void test4(TestContext context) {
+    Vertx vertx = Vertx.vertx();
 
     vertx.createHttpServer()
       .requestHandler(x -> {})
       .listen(0)
       .onComplete(context.asyncAssertSuccess());
-  }
 
-  @Test
-  public void test4(TestContext context) {
     vertx.createHttpClient().request(HttpMethod.GET, "example.invalid", "/")
     .onComplete(context.asyncAssertFailure(res -> {
       context.assertTrue(res.getMessage().contains("example.invalid"), res.getMessage());
