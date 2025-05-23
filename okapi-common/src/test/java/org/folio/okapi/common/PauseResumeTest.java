@@ -33,8 +33,8 @@ public class PauseResumeTest {
   @Test
   public void test4(TestContext context) {
     HttpClient cli = vertx.createHttpClient();
-    cli.request(HttpMethod.GET, "example.invalid", "/").onComplete(context.asyncAssertFailure(res -> {
-      context.assertTrue(res.getMessage().contains("example.invalid"), res.getMessage());
+    cli.request(HttpMethod.GET, "255.255.255.255", "/").onComplete(context.asyncAssertFailure(res -> {
+      context.assertTrue(res.getMessage().contains("255.255.255.255"), res.getMessage());
     }));
   }
 
