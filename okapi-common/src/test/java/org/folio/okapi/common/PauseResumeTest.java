@@ -27,7 +27,7 @@ public class PauseResumeTest {
       .listen(0)
       .compose(x -> {
             HttpClient cli = vertx.createHttpClient();
-            return cli.request(HttpMethod.POST, PORT, "localhostxxx", "/test2")
+            return cli.request(HttpMethod.POST, PORT, "localhostxxx", "/test2");
       })
       .onComplete(context.asyncAssertFailure(res -> {
         context.assertTrue(res.getMessage().contains("localhostxxx"), res.getMessage());
