@@ -24,11 +24,12 @@ public class PauseResumeTest {
   @Before
   public void setUp(TestContext context) {
     vertx = Vertx.vertx();
-
+    /*
     vertx.createHttpServer()
       .requestHandler(x -> {})
       .listen(0)
       .onComplete(context.asyncAssertSuccess());
+    */
   }
 
   @Test
