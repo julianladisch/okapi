@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 public class PauseResumeTest {
 
   private Vertx vertx;
-  private static final int PORT = 9230;
 
   @Before
   public void setUp(TestContext context) {
@@ -34,9 +33,9 @@ public class PauseResumeTest {
   @Test
   public void test4(TestContext context) {
     HttpClient cli = vertx.createHttpClient();
-    cli.request(HttpMethod.POST, PORT, "localhostxxx", "/test2").onComplete(context.asyncAssertFailure(res -> {
-          context.assertTrue(res.getMessage().contains("localhostxxx"), res.getMessage());
-            }));
+    cli.request(HttpMethod.POST, "localhostxxx", "/test2").onComplete(context.asyncAssertFailure(res -> {
+      context.assertTrue(res.getMessage().contains("localhostxxx"), res.getMessage());
+    }));
   }
 
 }
