@@ -4,19 +4,14 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    strategy:
-      matrix:
-        runner: ['ubuntu-24.04', 'ubuntu-22.04']
-        distribution: ['temurin', 'oracle', 'corretto', 'semeru']
-      fail-fast: false
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: actions/setup-java@v4
         with:
-          distribution: ${{ matrix.distribution }}
+          distribution: temurin
           java-version: '21'
           cache: maven
       - run: mvn -B clean install -DskipTests
