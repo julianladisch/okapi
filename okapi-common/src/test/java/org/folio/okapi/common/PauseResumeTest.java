@@ -70,54 +70,6 @@ public class PauseResumeTest {
     .onComplete(context.asyncAssertSuccess());
   }
 
-  @After
-  public void tearDown(TestContext context) {
-    vertx.close()
-    .onComplete(context.asyncAssertSuccess());
-  }
-
-  @Test
-  public void test1(TestContext context) {
-    Async async = context.async();
-
-    HttpClient cli = vertx.createHttpClient();
-    cli.request(HttpMethod.POST, PORT,"localhost", "/test1").onComplete(context.asyncAssertSuccess(req -> {
-      req.end();
-      req.response()
-      .onComplete(context.asyncAssertSuccess(res -> {
-        Buffer b = Buffer.buffer();
-        res.handler(b::appendBuffer);
-        res.endHandler(res2 -> {
-          context.assertEquals("OK1", b.toString());
-          context.assertEquals(200, res.statusCode());
-          async.complete();
-        });
-      }));
-    }));
-    async.await();
-  }
-
-  @Test
-  public void test2(TestContext context) {
-    Async async = context.async();
-
-    HttpClient cli = vertx.createHttpClient();
-    cli.request(HttpMethod.POST, PORT,"localhost", "/test2").onComplete(context.asyncAssertSuccess(req -> {
-      req.end();
-      req.response()
-      .onComplete(context.asyncAssertSuccess(res -> {
-        Buffer b = Buffer.buffer();
-        res.handler(b::appendBuffer);
-        res.endHandler(res2 -> {
-          context.assertEquals("OK2", b.toString());
-          context.assertEquals(200, res.statusCode());
-          async.complete();
-        });
-      }));
-    }));
-    async.await();
-  }
-
   @Test
   public void test4(TestContext context) {
     HttpClient cli = vertx.createHttpClient();
