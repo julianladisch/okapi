@@ -27,7 +27,7 @@ public class PauseResumeTest {
 
     vertx.createHttpServer()
       .requestHandler(x -> {})
-      .listen(PORT)
+      .listen(0)
       .onComplete(context.asyncAssertSuccess());
   }
 
