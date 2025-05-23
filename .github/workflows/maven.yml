@@ -1,0 +1,22 @@
+name: maven
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner: ['ubuntu-latest', 'ubuntu-24.04-arm']
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+      - run: mvn --batch-mode verify
+        env:
+          TESTCONTAINERS_POSTGRES_IMAGE: ${{ matrix.postgres }}
