@@ -8,8 +8,6 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +30,8 @@ public class PauseResumeTest {
 
   @Test
   public void test4(TestContext context) {
-    HttpClient cli = vertx.createHttpClient();
-    cli.request(HttpMethod.GET, "example.invalid", "/").onComplete(context.asyncAssertFailure(res -> {
+    vertx.createHttpClient().request(HttpMethod.GET, "example.invalid", "/")
+    .onComplete(context.asyncAssertFailure(res -> {
       context.assertTrue(res.getMessage().contains("example.invalid"), res.getMessage());
     }));
   }
