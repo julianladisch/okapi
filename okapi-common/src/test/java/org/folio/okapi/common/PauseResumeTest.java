@@ -21,7 +21,7 @@ public class PauseResumeTest {
   private Vertx vertx;
   private static final int PORT = 9230;
 
-  @Before
+  // @Before
   public void setUp(TestContext context) {
     vertx = Vertx.vertx();
 
