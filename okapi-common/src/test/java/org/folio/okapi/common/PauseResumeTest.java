@@ -18,20 +18,25 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class PauseResumeTest {
 
-  @Test
-  public void test4(TestContext context) {
-    Vertx vertx = Vertx.vertx();
+  private Vertx vertx;
+  private static final int PORT = 9230;
+
+  @Before
+  public void setUp(TestContext context) {
+    vertx = Vertx.vertx();
 
     vertx.createHttpServer()
       .requestHandler(x -> {})
       .listen(0)
-      .compose(x -> {
-            HttpClient cli = vertx.createHttpClient();
-            return cli.request(HttpMethod.POST, "localhostxxx", "/test2");
-      })
-      .onComplete(context.asyncAssertFailure(res -> {
-        context.assertTrue(res.getMessage().contains("localhostxxx"), res.getMessage());
-      }));
+      .onComplete(context.asyncAssertSuccess());
+  }
+
+  @Test
+  public void test4(TestContext context) {
+    HttpClient cli = vertx.createHttpClient();
+    cli.request(HttpMethod.POST, PORT, "localhostxxx", "/test2").onComplete(context.asyncAssertFailure(res -> {
+          context.assertTrue(res.getMessage().contains("localhostxxx"), res.getMessage());
+            }));
   }
 
 }
