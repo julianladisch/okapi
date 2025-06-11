@@ -80,12 +80,10 @@ public class DockerTest {
     httpClient.request(HttpMethod.DELETE, port, "localhost", "/_/discovery/modules")
     .compose(request -> {
       request.end();
-      return request.response();
+      return request.response()
+          .expecting(HttpResponseExpectation.SC_NO_CONTENT);
     })
-    .compose(response -> {
-      context.assertEquals(204, response.statusCode());
-      return response.end();
-    })
+    .compose(response -> response.end())
     .eventually(() -> vertx.undeploy(verticleId))
     .onComplete(context.asyncAssertSuccess());
   }
