@@ -108,7 +108,8 @@ public class ProxyService {
     this.okapiUrl = okapiUrl;
     waitMs = Config.getSysConfInteger(ConfNames.LOG_WAIT_MS, 0, config);
     enableSystemAuth = Config.getSysConfBoolean(ConfNames.ENABLE_SYSTEM_AUTH, true, config);
-    enableTraceHeaders = Config.getSysConfBoolean(ConfNames.ENABLE_TRACE_HEADERS, false, config);
+    // enableTraceHeaders = Config.getSysConfBoolean(ConfNames.ENABLE_TRACE_HEADERS, false, config);
+    enableTraceHeaders = true;
     HttpClientOptions opt = new HttpClientOptions();
     opt.setMaxPoolSize(1000);
     httpClient = new FuturisedHttpClient(vertx, opt);
@@ -527,8 +528,12 @@ public class ProxyService {
    * @param ctx routing context
    */
   public void proxy(RoutingContext ctx) {
+    var methodUri = ctx.request().method().name() + " " + ctx.request().absoluteURI();
+    logger.debug("proxy inital stream.pause(): {}", methodUri);
+
     ReadStream<Buffer> stream = ctx.request();
     stream.pause();
+
     // Pause the request data stream before doing any slow ops, otherwise
     // it will get read into a buffer somewhere.
 
@@ -541,6 +546,7 @@ public class ProxyService {
     try {
       parseTokenAndPopulateContext(pc);
     } catch (IllegalArgumentException e) {
+      logger.debug("proxy IllegalArgumentException stream.resume(): {}", methodUri);
       stream.resume();
       return; // Error code already set in ctx
     }
@@ -548,6 +554,7 @@ public class ProxyService {
     sanitizeAuthHeaders(headers);
     tenantManager.get(tenantId)
         .onFailure(cause -> {
+          logger.debug("proxy get tenant stream.resume(): {}", methodUri);
           stream.resume();
           pc.responseError(400, messages.getMessage("10106", tenantId));
         })
@@ -558,6 +565,7 @@ public class ProxyService {
           MetricsHelper.recordCodeExecutionTime(sample,
               "ProxyService.getModulesForRequest");
           if (l == null) {
+            logger.debug("proxy no module instance stream.resume(): {}", methodUri);
             stream.resume();
             return; // ctx already set up
           }
@@ -573,6 +581,7 @@ public class ProxyService {
           headers.set(XOkapiHeaders.REQUEST_METHOD, ctx.request().method().name());
 
           resolveUrls(l).onFailure(cause -> {
+            logger.debug("proxy resolveUrls failure stream.resume(): {}", methodUri);
             stream.resume();
             pc.responseError(OkapiError.getType(cause), cause);
           }).onSuccess(res -> {
@@ -583,6 +592,7 @@ public class ProxyService {
   }
 
   private static void clientsEnd(Buffer bcontent, List<HttpClientRequest> clientRequestList) {
+    logger.debug("proxy clientsEnd");
     for (HttpClientRequest r : clientRequestList) {
       r.end(bcontent);
     }
@@ -594,6 +604,7 @@ public class ProxyService {
     RoutingContext ctx = pc.getCtx();
     if (pc.getAuthRes() != 0 && !statusOk(pc.getAuthRes())) {
       if (bcontent == null) {
+        logger.debug("proxy proxyResponseImmediate readStream.resume");
         readStream.resume();
       }
       bcontent = pc.getAuthResBody();
@@ -696,6 +707,7 @@ public class ProxyService {
       final Buffer incoming = Buffer.buffer();
       stream.handler(incoming::appendBuffer);
       stream.endHandler(v -> handle.handle(incoming));
+      logger.debug("proxy proxyStreamToBuffer stream.resume");
       stream.resume();
     }
   }
@@ -774,6 +786,7 @@ public class ProxyService {
     writeStreams.addAll(logWriteStreams);
     pumpOneToMany(readStream, writeStreams);
     readStream.exceptionHandler(e -> logger.warn("streamHandle: content exception ", e));
+    logger.debug("proxy streamHandle readStream.resume");
     readStream.resume();
   }
 
@@ -790,8 +803,10 @@ public class ProxyService {
       }
     }
     if (pause) {
+      logger.debug("proxy pauseAndResume readStream.pause");
       readStream.pause();
     } else {
+      logger.debug("proxy pauseAndResume readStream.resume");
       readStream.resume();
     }
   }
@@ -805,6 +820,7 @@ public class ProxyService {
       pauseAndResume(readStream, writeStreams);
     });
     readStream.endHandler(v -> {
+      logger.debug("proxy pumpOneToMany readStream.endHandler");
       for (WriteStream<Buffer> w : writeStreams) {
         w.end();
       }
@@ -895,6 +911,7 @@ public class ProxyService {
               } else {
                 proxyResponseImmediate(pc, res, null, clientRequestList);
                 if (bcontent == null) {
+                  logger.debug("proxy proxyHeaders bcontent==null stream.resume");
                   stream.resume();
                 }
               }
@@ -963,6 +980,7 @@ public class ProxyService {
 
     RoutingContext ctx = pc.getCtx();
     if (!it.hasNext()) {
+      logger.debug("proxy proxyR stream.resume");
       stream.resume();
       pc.responseError(404, ""); // Should have been caught earlier
     } else {
