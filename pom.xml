@@ -40,9 +40,14 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
-        <version>5.1.8</version>  <!-- also update depending versions below! -->
+        <version>5.2.0</version>  <!-- also update depending versions below! -->
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>5.3.0-SNAPSHOT</version>  <!-- https://github.com/eclipse-vertx/vert.x/pull/6383 -->
       </dependency>
 
        <!-- START: versions that depend on the vertx-stack-depchain version -->
