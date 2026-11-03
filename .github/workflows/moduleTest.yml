@@ -15,4 +15,4 @@ jobs:
           java-version: '21'
           cache: maven
       - run: mvn --batch-mode install -DskipTests
-      - run: cd okapi-core; mvn --batch-mode test -Dtest=ModuleTest
+      - run: cd okapi-core; mvn --batch-mode test
