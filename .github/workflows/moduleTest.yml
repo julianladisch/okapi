@@ -2,7 +2,8 @@ name: ModuleTest
 on:
   workflow_dispatch:
   push:
-    branches: ["pinOkapiBranches"]
+    branches:
+      - 'pinOkapiBranches'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,4 +14,4 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: maven
-      - run: mvn --batch-mode test -Dtest=ModuleTest -Dsurefire.failIfNoSpecifiedTests=false
+      - run: mvn --batch-mode test -Dtest=xModuleTest -Dsurefire.failIfNoSpecifiedTests=false
