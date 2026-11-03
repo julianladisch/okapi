@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'pinOkapiBranches'
+      - 'pinOkapiVersion'
 jobs:
   build:
     runs-on: ubuntu-latest
