@@ -14,5 +14,4 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: maven
-      - run: mvn --batch-mode package -DskipTests
-      - run: mvn --batch-mode test -Dtest=ModuleTest -Dsurefire.failIfNoSpecifiedTests=false
+      - run: mvn --batch-mode package -Dtest=ModuleTest -Dsurefire.failIfNoSpecifiedTests=false
